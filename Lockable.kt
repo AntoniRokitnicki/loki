@@ -11,8 +11,8 @@ abstract class Lockable<E : Enum<E>>(enumClass: Class<E>) {
 
     fun lock(value: E) {
         val lock = locks.computeIfAbsent(value) { Semaphore(1) }
-        lock.acquire()
         currentlyLocked.add(value)
+        lock.acquire()
     }
 
     fun unlock(value: E) {
@@ -65,7 +65,7 @@ fun main() {
         }.start()
 
         while (!(service.isLocked(SystemOperation.MAINTENANCE) && cleanup.isLocked(SystemOperation.CLEANUP))) {
-            Thread.sleep(10)
+            Thread.sleep(100)
         }
 
         when (testCase) {
